@@ -1,0 +1,27 @@
+import { Word } from '../types';
+
+export const CLIMATE_CHANGE_VOCABULARY: Word[] = [
+    { term: "Acid rain", partOfSpeech: "n", definition: "Rain containing harmful chemicals from the atmosphere.", translation: "Mưa axit", category: "Climate Change" },
+    { term: "Aftershock", partOfSpeech: "n", definition: "A smaller earthquake after a main one.", translation: "Dư chấn", category: "Climate Change" },
+    { term: "Carbon footprint", partOfSpeech: "n", definition: "Amount of CO2 released by activities.", translation: "Dấu chân carbon", category: "Climate Change" },
+    { term: "Carbon-neutral", partOfSpeech: "adj", definition: "Balanced CO2 emissions with offsets.", translation: "Trung hòa carbon", category: "Climate Change" },
+    { term: "Carbon capture", partOfSpeech: "n", definition: "Process of collecting and storing CO2.", translation: "Thu giữ carbon", category: "Climate Change" },
+    { term: "Clearcutting", partOfSpeech: "v", definition: "Cutting down most or all trees in an area.", translation: "Phát quang", category: "Climate Change" },
+    { term: "Climate denial", partOfSpeech: "n", definition: "Refusing to accept climate change is happening.", translation: "Phủ nhận biến đổi khí hậu", category: "Climate Change" },
+    { term: "Climate emergency", partOfSpeech: "n", definition: "Situation requiring immediate action on climate.", translation: "Tình trạng khẩn cấp về khí hậu", category: "Climate Change" },
+    { term: "Disaster area", partOfSpeech: "n", definition: "A place where a disaster has occurred.", translation: "Khu vực thiên tai", category: "Climate Change" },
+    { term: "Domestic waste", partOfSpeech: "n", definition: "Household garbage.", translation: "Rác thải sinh hoạt", category: "Climate Change" },
+    { term: "Eco-anxiety", partOfSpeech: "n", definition: "Fear of environmental damage.", translation: "Lo lắng sinh thái", category: "Climate Change" },
+    { term: "Electrical storm", partOfSpeech: "n", definition: "A storm with lightning.", translation: "Bão điện", category: "Climate Change" },
+    { term: "Energy-efficient", partOfSpeech: "adj", definition: "Using less energy.", translation: "Tiết kiệm năng lượng", category: "Climate Change" },
+    { term: "Flight shame", partOfSpeech: "n", definition: "Guilt about flying due to environmental impact.", translation: "Xấu hổ khi đi máy bay", category: "Climate Change" },
+    { term: "Greenhouse gases", partOfSpeech: "n", definition: "Gases that trap heat in atmosphere.", translation: "Khí nhà kính", category: "Climate Change" },
+    { term: "Hazardous waste", partOfSpeech: "n", definition: "Dangerous waste materials.", translation: "Chất thải độc hại", category: "Climate Change" },
+    { term: "Ozone-friendly", partOfSpeech: "adj", definition: "Not harmful to the ozone layer.", translation: "Thân thiện với tầng ozone", category: "Climate Change" },
+    { term: "Shock wave", partOfSpeech: "n", definition: "Pressure movement caused by explosion.", translation: "Sóng xung kích", category: "Climate Change" },
+    { term: "Solar radiation", partOfSpeech: "n", definition: "Energy from the sun.", translation: "Bức xạ mặt trời", category: "Climate Change" },
+    { term: "Tidal wave", partOfSpeech: "n", definition: "Very large wave caused by storm or earthquake.", translation: "Sóng thần", category: "Climate Change" },
+    { term: "Tremor", partOfSpeech: "n", definition: "A small earthquake.", translation: "Trận động đất nhỏ", category: "Climate Change" },
+    { term: "Waterspout", partOfSpeech: "n", definition: "A rotating column of water.", translation: "Vòi rồng", category: "Climate Change" },
+    { term: "Zero-emission", partOfSpeech: "adj", definition: "Releasing no polluting gases.", translation: "Không phát thải", category: "Climate Change" },
+];
