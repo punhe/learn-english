@@ -8,34 +8,53 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onHome, onLearn }) => {
   return (
-    <header className="fixed top-0 left-0 right-0 bg-wecare-blue text-white shadow-md z-50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div 
+    <header className="fixed top-4 left-4 right-4 z-50">
+      <nav className="glass rounded-2xl shadow-glass max-w-6xl mx-auto px-6 py-3 flex items-center justify-between border border-white/50">
+        {/* Logo */}
+        <button
           onClick={onHome}
           className="flex items-center gap-3 cursor-pointer group"
+          aria-label="Go to home page"
         >
-          <div className="h-10 w-10 flex items-center justify-center bg-white rounded-lg p-1 shadow-sm">
-             <img 
-               src="https://i.imgur.com/tD07Yrv.png" 
-               alt="Wecare Logo" 
-               className="h-full object-contain"
-             />
+          <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-400 rounded-xl flex items-center justify-center shadow-md shadow-primary-500/20 group-hover:shadow-lg group-hover:scale-105 transition-all">
+            <i className="fa-solid fa-graduation-cap text-white text-lg"></i>
           </div>
-          <span className="text-xl font-bold font-lexend tracking-tight">C1 Mastery</span>
+          <div className="hidden sm:block">
+            <h1 className="text-lg font-bold text-text font-outfit tracking-tight">C1 Master</h1>
+            <p className="text-[10px] font-medium text-text-muted uppercase tracking-wider">Vocabulary Learning</p>
+          </div>
+        </button>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-2">
+          <button
+            onClick={onHome}
+            className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all cursor-pointer flex items-center gap-2"
+          >
+            <i className="fa-solid fa-house"></i>
+            <span>Trang chủ</span>
+          </button>
+          <button
+            onClick={onLearn}
+            className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all cursor-pointer flex items-center gap-2"
+          >
+            <i className="fa-solid fa-list"></i>
+            <span>Từ vựng</span>
+          </button>
+          <button
+            onClick={onHome}
+            className="px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-semibold rounded-xl hover:from-primary-700 hover:to-primary-600 shadow-md shadow-primary-500/20 hover:shadow-lg transition-all cursor-pointer flex items-center gap-2"
+          >
+            <i className="fa-solid fa-bolt"></i>
+            <span>Học ngay</span>
+          </button>
         </div>
-        
-        <nav className="hidden md:flex items-center gap-6">
-          <button onClick={onHome} className="font-medium hover:text-white/80 transition-colors">Trang chủ</button>
-          <button onClick={onLearn} className="font-medium hover:text-white/80 transition-colors">Từ vựng</button>
-          <button className="px-5 py-2 bg-wecare-green text-white font-bold rounded-lg hover:bg-wecare-green/90 transition-all shadow-sm">Bắt đầu học</button>
-        </nav>
-        
-        <div className="md:hidden">
-           <button className="w-10 h-10 flex items-center justify-center text-white">
-             <i className="fa-solid fa-bars-staggered text-xl"></i>
-           </button>
-        </div>
-      </div>
+
+        {/* Mobile Menu Button */}
+        <button className="md:hidden w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-text-secondary hover:bg-primary-100 hover:text-primary-600 transition-all cursor-pointer">
+          <i className="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </nav>
     </header>
   );
 };
