@@ -1,16 +1,19 @@
 
 import React, { useState, useMemo } from 'react';
-import { AppState, Word } from './types';
+import { AppState, Word, ReadingVocab } from './types';
 import { C1_VOCABULARY, getRandomWords, getWordCountByCategory } from './constants';
 import Header from './components/Header';
 import VocabularyList from './components/VocabularyList';
 import Flashcard from './components/Flashcard';
+import ReadingVocabPage from './components/ReadingVocabPage';
+import ReadingFlashcard from './components/ReadingFlashcard';
 
 const App: React.FC = () => {
   const [state, setState] = useState<AppState>(AppState.LANDING);
   const [deck, setDeck] = useState<Word[]>([]);
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
   const [currentCategory, setCurrentCategory] = useState("All");
+  const [readingVocabsForReview, setReadingVocabsForReview] = useState<ReadingVocab[]>([]);
 
   const wordCounts = useMemo(() => getWordCountByCategory(), []);
   const totalWords = C1_VOCABULARY.length;
@@ -35,6 +38,11 @@ const App: React.FC = () => {
     if (currentCardIdx > 0) {
       setCurrentCardIdx(prev => prev - 1);
     }
+  };
+
+  const startReadingFlashcards = (vocabs: ReadingVocab[]) => {
+    setReadingVocabsForReview(vocabs);
+    setState(AppState.READING_FLASHCARDS);
   };
 
   const categoryIcons: Record<string, string> = {
@@ -92,6 +100,13 @@ const App: React.FC = () => {
                 <i className="fa-solid fa-bolt group-hover:scale-110 transition-transform"></i>
                 <span>Học ngay</span>
               </button>
+              <button
+                onClick={() => setState(AppState.READING_VOCAB)}
+                className="group px-6 py-3.5 bg-gradient-to-r from-secondary-600 to-secondary-500 text-white font-bold rounded-2xl hover:from-secondary-700 hover:to-secondary-600 shadow-lg shadow-secondary-500/25 hover:shadow-xl transition-all duration-200 flex items-center gap-3 cursor-pointer"
+              >
+                <i className="fa-solid fa-book-open group-hover:scale-110 transition-transform"></i>
+                <span>Kho Reading</span>
+              </button>
             </div>
 
             {/* Stats */}
@@ -140,6 +155,17 @@ const App: React.FC = () => {
 
       case AppState.LEARNING:
         return <VocabularyList words={C1_VOCABULARY} />;
+
+      case AppState.READING_VOCAB:
+        return <ReadingVocabPage onStartFlashcards={startReadingFlashcards} />;
+
+      case AppState.READING_FLASHCARDS:
+        return (
+          <ReadingFlashcard
+            vocabs={readingVocabsForReview}
+            onBack={() => setState(AppState.READING_VOCAB)}
+          />
+        );
 
       case AppState.FLASHCARDS:
         const progress = ((currentCardIdx + 1) / deck.length) * 100;
@@ -208,13 +234,17 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background selection:bg-primary-200 selection:text-primary-900">
-      <Header onHome={() => setState(AppState.LANDING)} onLearn={() => setState(AppState.LEARNING)} />
+      <Header
+        onHome={() => setState(AppState.LANDING)}
+        onLearn={() => setState(AppState.LEARNING)}
+        onReadingVocab={() => setState(AppState.READING_VOCAB)}
+      />
       <main className="container mx-auto px-4 max-w-6xl pt-24 pb-32">
         {renderContent()}
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-4 left-4 right-4 glass rounded-2xl md:hidden z-50 px-6 py-3 flex justify-around shadow-glass border border-white/50">
+      <nav className="fixed bottom-4 left-4 right-4 glass rounded-2xl md:hidden z-50 px-4 py-3 flex justify-around shadow-glass border border-white/50">
         <button
           onClick={() => setState(AppState.LANDING)}
           className={`flex flex-col items-center gap-1 transition-all cursor-pointer ${state === AppState.LANDING ? 'text-primary-600 scale-110' : 'text-text-secondary'}`}
@@ -228,6 +258,13 @@ const App: React.FC = () => {
         >
           <i className="fa-solid fa-list text-lg"></i>
           <span className="text-[10px] font-medium">Từ vựng</span>
+        </button>
+        <button
+          onClick={() => setState(AppState.READING_VOCAB)}
+          className={`flex flex-col items-center gap-1 transition-all cursor-pointer ${state === AppState.READING_VOCAB || state === AppState.READING_FLASHCARDS ? 'text-secondary-600 scale-110' : 'text-text-secondary'}`}
+        >
+          <i className="fa-solid fa-book-open text-lg"></i>
+          <span className="text-[10px] font-medium">Reading</span>
         </button>
         <button
           onClick={() => startFlashcards("All")}

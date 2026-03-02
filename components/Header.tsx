@@ -4,9 +4,10 @@ import React from 'react';
 interface HeaderProps {
   onHome: () => void;
   onLearn: () => void;
+  onReadingVocab: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onHome, onLearn }) => {
+const Header: React.FC<HeaderProps> = ({ onHome, onLearn, onReadingVocab }) => {
   return (
     <header className="fixed top-4 left-4 right-4 z-50">
       <nav className="glass rounded-2xl shadow-glass max-w-6xl mx-auto px-6 py-3 flex items-center justify-between border border-white/50">
@@ -39,7 +40,14 @@ const Header: React.FC<HeaderProps> = ({ onHome, onLearn }) => {
             className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all cursor-pointer flex items-center gap-2"
           >
             <i className="fa-solid fa-list"></i>
-            <span>Từ vựng</span>
+            <span>Từ vựng C1</span>
+          </button>
+          <button
+            onClick={onReadingVocab}
+            className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-secondary-600 hover:bg-secondary-50 rounded-xl transition-all cursor-pointer flex items-center gap-2"
+          >
+            <i className="fa-solid fa-book-open"></i>
+            <span>Reading</span>
           </button>
           <button
             onClick={onHome}
