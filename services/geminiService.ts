@@ -18,8 +18,7 @@ export async function parseVocabularyWithGemini(rawInput: string): Promise<Readi
         return parseVocabularyManually(rawInput);
     }
 
-    try {
-        const prompt = `Bạn là một trợ lý học tiếng Anh. Hãy phân tích đầu vào sau và trả về dạng JSON array.
+    const prompt = `Bạn là một trợ lý học tiếng Anh. Hãy phân tích đầu vào sau và trả về dạng JSON array.
 
 Mỗi từ vựng trong input có thể theo format:
 - Dòng đầu: [từ tiếng Anh] [nghĩa tiếng Việt ngắn]
@@ -45,53 +44,75 @@ Nếu thiếu trường nào, hãy để string rỗng "" hoặc mảng rỗng [
 INPUT:
 ${rawInput}`;
 
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: {
-                        temperature: 0.1,
-                        maxOutputTokens: 4096,
-                    },
-                }),
+    const MAX_RETRIES = 3;
+    const BASE_DELAY_MS = 2000; // 2 seconds
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            const response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            temperature: 0.1,
+                            maxOutputTokens: 4096,
+                        },
+                    }),
+                }
+            );
+
+            // Handle rate limiting with retry
+            if (response.status === 429) {
+                if (attempt < MAX_RETRIES) {
+                    const delay = BASE_DELAY_MS * Math.pow(2, attempt); // 2s, 4s, 8s
+                    console.warn(`Gemini API rate limited (429). Retrying in ${delay / 1000}s... (attempt ${attempt + 1}/${MAX_RETRIES})`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue;
+                }
+                console.error('Gemini API rate limited after all retries. Falling back to manual parsing.');
+                return parseVocabularyManually(rawInput);
             }
-        );
 
-        if (!response.ok) {
-            console.error('Gemini API error:', response.status);
-            return parseVocabularyManually(rawInput);
+            if (!response.ok) {
+                console.error('Gemini API error:', response.status);
+                return parseVocabularyManually(rawInput);
+            }
+
+            const data = await response.json();
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+            // Clean the response - remove markdown code blocks if present
+            const cleanedText = text
+                .replace(/```json\s*/g, '')
+                .replace(/```\s*/g, '')
+                .trim();
+
+            const parsed = JSON.parse(cleanedText);
+
+            if (!Array.isArray(parsed)) {
+                return parseVocabularyManually(rawInput);
+            }
+
+            return parsed.map((item: any) => ({
+                term: item.term || '',
+                meaning: item.meaning || '',
+                relatedStructure: item.relatedStructure || '',
+                explanation: item.explanation || '',
+                examples: Array.isArray(item.examples) ? item.examples : [],
+                createdAt: Date.now(),
+            }));
+        } catch (error) {
+            console.error(`Error parsing with Gemini (attempt ${attempt + 1}):`, error);
+            if (attempt === MAX_RETRIES) {
+                return parseVocabularyManually(rawInput);
+            }
         }
-
-        const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-        // Clean the response - remove markdown code blocks if present
-        const cleanedText = text
-            .replace(/```json\s*/g, '')
-            .replace(/```\s*/g, '')
-            .trim();
-
-        const parsed = JSON.parse(cleanedText);
-
-        if (!Array.isArray(parsed)) {
-            return parseVocabularyManually(rawInput);
-        }
-
-        return parsed.map((item: any) => ({
-            term: item.term || '',
-            meaning: item.meaning || '',
-            relatedStructure: item.relatedStructure || '',
-            explanation: item.explanation || '',
-            examples: Array.isArray(item.examples) ? item.examples : [],
-            createdAt: Date.now(),
-        }));
-    } catch (error) {
-        console.error('Error parsing with Gemini:', error);
-        return parseVocabularyManually(rawInput);
     }
+
+    return parseVocabularyManually(rawInput);
 }
 
 /**

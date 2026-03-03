@@ -61,7 +61,7 @@ const ReadingVocabPage: React.FC<ReadingVocabPageProps> = ({ onStartFlashcards }
             setShowPreview(true);
         } catch (error) {
             console.error('Error parsing:', error);
-            setErrorMessage('Lỗi khi phân tích. Vui lòng thử lại.');
+            setErrorMessage('Lỗi khi phân tích. API có thể bị giới hạn (429). Vui lòng đợi vài giây rồi thử lại.');
         } finally {
             setIsParsing(false);
         }
@@ -80,7 +80,7 @@ const ReadingVocabPage: React.FC<ReadingVocabPageProps> = ({ onStartFlashcards }
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             console.error('Error saving:', error);
-            setErrorMessage('Lỗi khi lưu. Kiểm tra cấu hình Firebase.');
+            setErrorMessage('Lỗi khi lưu: Firestore từ chối quyền truy cập. Hãy cập nhật Security Rules trong Firebase Console (cho phép read/write).');
         } finally {
             setIsSaving(false);
         }
@@ -139,8 +139,8 @@ const ReadingVocabPage: React.FC<ReadingVocabPageProps> = ({ onStartFlashcards }
                 <button
                     onClick={() => setActiveTab('add')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all cursor-pointer ${activeTab === 'add'
-                            ? 'bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-md'
-                            : 'text-text-secondary hover:bg-muted'
+                        ? 'bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-md'
+                        : 'text-text-secondary hover:bg-muted'
                         }`}
                 >
                     <i className="fa-solid fa-plus"></i>
@@ -149,8 +149,8 @@ const ReadingVocabPage: React.FC<ReadingVocabPageProps> = ({ onStartFlashcards }
                 <button
                     onClick={() => setActiveTab('list')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all cursor-pointer ${activeTab === 'list'
-                            ? 'bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-md'
-                            : 'text-text-secondary hover:bg-muted'
+                        ? 'bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-md'
+                        : 'text-text-secondary hover:bg-muted'
                         }`}
                 >
                     <i className="fa-solid fa-book-open"></i>

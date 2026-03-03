@@ -208,11 +208,6 @@ const ReadingFlashcard: React.FC<ReadingFlashcardProps> = ({ vocabs, onBack }) =
                                 {currentVocab.term}
                             </h2>
 
-                            {/* Meaning */}
-                            <p className="text-xl md:text-2xl font-bold text-primary-600">
-                                {currentVocab.meaning}
-                            </p>
-
                             {/* Structure badge */}
                             {currentVocab.relatedStructure && (
                                 <code className="inline-block text-sm font-mono text-secondary-700 bg-secondary-50 px-4 py-1.5 rounded-lg border border-secondary-200">
