@@ -57,11 +57,17 @@ const ReadingVocabPage: React.FC<ReadingVocabPageProps> = ({ onStartFlashcards }
         setErrorMessage('');
         try {
             const items = await parseVocabularyWithGemini(rawInput);
-            setParsedItems(items);
-            setShowPreview(true);
+            if (items.length === 0) {
+                setErrorMessage('Không tìm thấy từ vựng nào. Kiểm tra lại định dạng đầu vào.');
+            } else {
+                setParsedItems(items);
+                setShowPreview(true);
+                setSuccessMessage(`Đã phân tích ${items.length} từ vựng thành công!`);
+                setTimeout(() => setSuccessMessage(''), 3000);
+            }
         } catch (error) {
             console.error('Error parsing:', error);
-            setErrorMessage('Lỗi khi phân tích. API có thể bị giới hạn (429). Vui lòng đợi vài giây rồi thử lại.');
+            setErrorMessage('Lỗi khi phân tích. Vui lòng thử lại.');
         } finally {
             setIsParsing(false);
         }
